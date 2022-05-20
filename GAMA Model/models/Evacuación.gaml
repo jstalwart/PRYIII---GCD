@@ -42,6 +42,7 @@ reflex end_model when: nb_locals + nb_turists = 0{
 	
 	/*Process in which we initialize the agents*/
 	init {
+		/*We generate the random seed, that allows us to replicate this exact model*/
 		seed <- 10;
 		/*We create the building agents from the shape file and we recover the variables we will use */
 		create building from: shape_file_buildings with: [type::string(read ("uso")), Trabajo::int(read("Trabajo")), Ocio::int(read("Ocio")), Residencial::int(read("Resdncl")), Turismo::int(read("Turismo")), Host::int(read("Host"))] {
@@ -185,12 +186,14 @@ species people skills:[moving] {
 		}
 	}
 	
-	
+	/*We generate a reflex in which at certain moment, the objective will change to evacuating and the 
+	 * target will point to the closest evacuation point */	
 	reflex evacuate when: current_date >= evacuation_start{
 		the_target <- evacuation_points closest_to self;
 		objective <- "evacuating";
 	}
 	
+	/*We generate a reflex in which we observe if the agent can be evacuated. In other case, we will remove the agent */	
 	reflex can_be_evacuated when: objective = "evacuating" and current_path = nil{
 		do die;
 	}
@@ -232,14 +235,14 @@ species locals parent: people{
 	}
 	
 	/*We generate a reflex in which at certain time, the objective will change from resting or chilling to working and the 
-	 * objective will point to the person working place */	
+	 * target will point to the person working place */	
 	reflex time_to_work when: current_date.hour >= start_work and (objective = "resting" or objective = "chilling"){
 		objective <- "working" ;
 		the_target <- any_location_in (working_place);
 	}
 	
 	/*We generate a reflex in which at certain time, the objective will change from resting or chilling to working and the 
-	 * objective will point to the person living place */	
+	 * target will point to the person living place */	
 	reflex time_to_go_home when: current_date.hour >= end_work and objective = "working"{
 		objective <- "resting" ;
 		the_target <- any_location_in (living_place); 
@@ -252,7 +255,7 @@ species locals parent: people{
 	}
 	
 	/*We generate a reflex in which at certain time, the objective will change from resting or chilling to working and the 
-	 * objective will point to the person working place */
+	 * target will point to the person working place */
 	reflex time_to_rest when: objective = "chilling" and current_date.hour > 20{
 		objective <- "resting";
 		the_target <- any_location_in (living_place);
@@ -272,18 +275,24 @@ species turist parent: people{
 	building hotel;
 	float hora_movimiento <- hora_ini;
 	
+	/*We generate a reflex in which at certain time, the objective will change from resting to turism and the 
+	 * target will point to any tourist center */
 	reflex time_to_do_turism when: objective = "resting" and current_date.hour >= hora_ini{
 		objective <- "turism";
 		the_target <- any_location_in(one_of(turism));
 		hora_movimiento <- hora_ini + rnd(1.0, 4.0); /*El random es para el tiempo de visita a un edificio */
 	}
 	
+	/*We generate a reflex in which at certain time, the objective will change from tourist to resting and the 
+	 * target will point to the person resting place */
 	reflex time_to_go_host when: current_date.hour >= hora_fin and objective = "turism"{
 		objective <- "resting";
 		the_target <- any_location_in(hotel);
 		hora_movimiento <- hora_ini;
 	}
 	
+	/*We generate a reflex in which at certain time, the objective will change from resting or chilling to working and the 
+	 * target will point to the person working place */
 	reflex change_turism when: current_date.hour >= hora_movimiento and objective = "turism"{
 		the_target <- any_location_in(one_of(turism));
 		hora_movimiento <- hora_movimiento + rnd(1.0, 4.0);
