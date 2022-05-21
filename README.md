@@ -4,7 +4,7 @@ This is the repository designed to address the code based on the thesis on the p
 One can distinguish two folders inside the leading directory: "GAMA Model" and "PYTHON Model".
 
 ## GAMA Model
-This folder contains information about the GAMA Model we have developed. It features two directories.
+This folder contains information about the GAMA Model we have developed -to be able to deploy the models the user will need to download the GAMA model [https://gama-platform.org/](https://gama-platform.org/download/). It features two directories.
 The folder "Includes" contains the required shapefiles to deploy the model. Meanwhile, the repository "Models" holds the three GAMA files used to develop the evacuation model.
 The file "ValenciaModel.gaml" contains the code required to obtain a simulation of any city.
 "Evacuation.gaml" is the file used when implementing the evacuation model.
