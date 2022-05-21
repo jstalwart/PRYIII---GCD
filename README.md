@@ -3,7 +3,7 @@
 This is the repository designed to address the code based on the thesis on the project "City simulations on extraordinary circumstances".
 One can distinguish two folders inside the leading directory: "GAMA Model" and "PYTHON Model".
 
-## MODEL RANGE
+## GAMA Model
 This folder contains information about the GAMA Model we have developed. It features two directories.
 The folder "Includes" contains the required shapefiles to deploy the model. Meanwhile, the repository "Models" holds the three GAMA files used to develop the evacuation model.
 The file "ValenciaModel.gaml" contains the code required to obtain a simulation of any city.
